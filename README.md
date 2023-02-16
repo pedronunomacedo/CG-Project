@@ -3,8 +3,8 @@
 ## Group T0xG0y
 | Name             | Number    | E-Mail             |
 | ---------------- | --------- | ------------------ |
-| John Doe         | 201901010 | ...                |
-| Jane Doe         | 201901011 | ...                |
+| Gonçalo Jorge Soares Ferreira         | 202004761 | up202004761@edu.fe.up.pt                |
+| Pedro Nuno Ferreira Moura de Macedo         | 202007531 | up202007531@edu.fe.up.pt                |
 
 ----
 
