@@ -1,6 +1,10 @@
 import { CGFscene, CGFcamera, CGFaxis } from "../lib/CGF.js";
-import { MyDiamond } from "./MyDiamond.js";
-
+import { MyDiamond } from "./ex1/MyDiamond.js";
+import { MyTriangle } from "./ex1/MyTriangle.js";
+import { MyParallelogram } from "./ex1/MyParallelogram.js";
+import { MyTriangleSmall } from "./ex2/MyTriangleSmall.js";
+import { MyTriangleBig } from "./ex2/MyTriangleBig.js";
+ 
 /**
  * MyScene
  * @constructor
@@ -15,7 +19,7 @@ export class MyScene extends CGFscene {
     this.initCameras();
     this.initLights();
 
-    //Background color
+    // Background color
     this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
     this.gl.clearDepth(100.0);
@@ -26,10 +30,16 @@ export class MyScene extends CGFscene {
     //Initialize scene objects
     this.axis = new CGFaxis(this);
     this.diamond = new MyDiamond(this);
+    this.triangle = new MyTriangle(this);
+    this.parallelogram = new MyParallelogram(this);
+    this.mytrianglesmall = new MyTriangleSmall(this);
+    this.mytrianglebig = new MyTriangleBig(this);
 
     //Objects connected to MyInterface
     this.displayAxis = true;
     this.scaleFactor = 1;
+    this.showDiamond = true;
+	  this.showTriangle = true;
   }
   initLights() {
     this.lights[0].setPosition(15, 2, 5, 1);
@@ -91,7 +101,11 @@ export class MyScene extends CGFscene {
 
     // ---- BEGIN Primitive drawing section
 
-    this.diamond.display();
+    if (this.showDiamond) this.diamond.display();
+    this.triangle.display(); 
+    this.parallelogram.display();
+    this.mytrianglesmall.display();
+    if (this.showTriangle) this.mytrianglebig.display();
 
     // ---- END Primitive drawing section
   }
