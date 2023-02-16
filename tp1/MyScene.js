@@ -40,6 +40,7 @@ export class MyScene extends CGFscene {
     this.scaleFactor = 1;
     this.showDiamond = true;
 	  this.showTriangle = true;
+    this.showParallelogram = true;
   }
   initLights() {
     this.lights[0].setPosition(15, 2, 5, 1);
@@ -103,7 +104,7 @@ export class MyScene extends CGFscene {
 
     if (this.showDiamond) this.diamond.display();
     this.triangle.display(); 
-    this.parallelogram.display();
+    if (this.showParallelogram) this.parallelogram.display();
     this.mytrianglesmall.display();
     if (this.showTriangle) this.mytrianglebig.display();
 

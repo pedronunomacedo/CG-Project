@@ -13,19 +13,20 @@ export class MyParallelogram extends CGFobject {
 	initBuffers() {
 		this.vertices = [
 			0, 0, 0,	// 0
-            1, 0, 0,    // 1
-            2, 0, 0,    // 2
-			1, 1, 0,	// 3
-			3, 1, 0,	// 4
-            2, 0, 0,    // 5
+            2, 0, 0,    // 1
+			1, 1, 0,	// 2
+            3, 1, 0,    // 3
 		];
 
 		// Counter-clockwise reference of vertices (references the one vertices, i.e. vertices indexes)
 		this.indices = [
-			1, 3, 0, 
-            2, 3, 1, 
-            2, 4, 3, 
-            2, 5, 4, 
+			// front side
+			0, 1, 2, 
+            1, 3, 2, 
+
+			// back side
+			2, 1, 0, 
+			2, 3, 1, 
 		];
 
 		
