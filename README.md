@@ -1,6 +1,6 @@
 # CG 2022/2023
 
-## Group T0xG0y
+## Group T04G03
 | Name             | Number    | E-Mail             |
 | ---------------- | --------- | ------------------ |
 | Gonçalo Jorge Soares Ferreira         | 202004761 | up202004761@edu.fe.up.pt                |
