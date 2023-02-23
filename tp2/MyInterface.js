@@ -21,6 +21,7 @@ export class MyInterface extends CGFinterface {
         this.gui.add(this.scene, 'displayAxis').name("Display Axis");
         this.gui.add(this.scene, 'showMyTangram').name("Show My Tang");
         this.gui.add(this.scene, 'showMyUnitCube').name("Show My UCube");
+        this.gui.add(this.scene, 'showMyUnitCubeQuad').name("Show My UCubQ");
 
         // Slider element in GUI
         this.gui.add(this.scene, 'scaleFactor', 0.1, 5).name('Scale Factor');
