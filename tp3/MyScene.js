@@ -4,6 +4,7 @@ import { MyCone } from "./forms/MyCone.js";
 import { MyPlane } from "./forms/MyPlane.js";
 import { MyTangram } from "./forms/MyTangram.js";
 import { MyUnitCube } from "./forms/MyUnitCube.js";
+import { MyPrism } from "./forms/MyPrism.js";
 
 /**
 * MyScene
@@ -34,11 +35,12 @@ export class MyScene extends CGFscene {
         this.pyramid = new MyPyramid(this, 3, 1);
         this.myTangram = new MyTangram(this);
         this.myUnitCube = new MyUnitCube(this);
+        this.MyPrism = new MyPrism(this, 6, 4);
         
-        this.objects = [this.plane, this.pyramid, this.cone, this.myTangram, this.myUnitCube];
+        this.objects = [this.plane, this.pyramid, this.cone, this.myTangram, this.myUnitCube, this.MyPrism];
 
         // Labels and ID's for object selection on MyInterface
-        this.objectIDs = { 'Plane': 0 , 'Pyramid': 1, 'Cone': 2, 'myTangram': 3, 'myUnitCube': 4 };
+        this.objectIDs = { 'Plane': 0 , 'Pyramid': 1, 'Cone': 2, 'MyTangram': 3, 'MyUnitCube': 4, 'MyPrism': 5 };
 
         //Other variables connected to MyInterface
         this.selectedObject = 0;
@@ -186,6 +188,7 @@ export class MyScene extends CGFscene {
             this.objects[this.selectedObject].disableNormalViz();
         
         this.objects[this.selectedObject].display();
+
         this.popMatrix();
         // ---- END Primitive drawing section
 

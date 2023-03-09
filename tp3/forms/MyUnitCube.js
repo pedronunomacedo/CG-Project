@@ -125,5 +125,11 @@ export class MyUnitCube extends CGFobject {
 
 		this.initGLBuffers();
 	}
+
+      updateBuffers(){
+            // reinitialize buffers
+            this.initBuffers();
+            this.initNormalVizBuffers();
+        }
 }
 
