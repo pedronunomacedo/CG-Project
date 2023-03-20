@@ -1,6 +1,7 @@
 import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFtexture } from "../lib/CGF.js";
 import { MyQuad } from "./forms/MyQuad.js";
 import { MyTangram } from "./forms/MyTangram.js";
+import { MyUnitCubeQuad } from "./forms/MyUnitCubeQuad.js";
 
 /**
  * MyScene
@@ -30,6 +31,10 @@ export class MyScene extends CGFscene {
         this.quad = new MyQuad(this);
         this.myTrangram = new MyTangram(this);
 
+        this.tex1 = new CGFtexture(this, 'images/mineTop.png');
+        this.tex2 = new CGFtexture(this, 'images/mineBottom.png');
+        this.tex3 = new CGFtexture(this, 'images/mineSide.png');
+
         //------ Applied Material
         this.quadMaterial = new CGFappearance(this);
         this.quadMaterial.setAmbient(0.1, 0.1, 0.1, 1);
@@ -49,6 +54,8 @@ export class MyScene extends CGFscene {
         this.myTrangramMaterial.setTextureWrap('REPEAT', 'REPEAT');
         //------
 
+        this.myUnitCubeQuad = new MyUnitCubeQuad(this, this.tex1, this.tex2, this.tex3, this.tex3, this.tex3, this.tex3);
+
         //------ Textures
         this.texture1 = new CGFtexture(this, 'images/board.jpg');
         this.texture2 = new CGFtexture(this, 'images/floor.png');
@@ -58,6 +65,7 @@ export class MyScene extends CGFscene {
         //-------Objects connected to MyInterface
         this.displayAxis = true;
         this.displayTangram = false;
+        this.displayUnitCubeQuad = false;
         this.scaleFactor = 5;
         this.selectedTexture = -1;        
         this.wrapS = 0;
@@ -136,10 +144,13 @@ export class MyScene extends CGFscene {
         
         // this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
 
-        this.quad.display();
+        
 
         if (this.displayTangram)
             this.myTrangram.display();
+
+        if (this.displayUnitCubeQuad)
+            this.myUnitCubeQuad.display();
 
         // ---- END Primitive drawing section
     }
