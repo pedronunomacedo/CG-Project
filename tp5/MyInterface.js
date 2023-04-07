@@ -1,4 +1,3 @@
-
 import {CGFinterface, dat} from '../lib/CGF.js';
 
 /**
@@ -17,7 +16,7 @@ export class MyInterface extends CGFinterface {
 		// init GUI. For more information on the methods, check:
         // https://github.com/dataarts/dat.gui/blob/master/API.md
 		this.gui = new dat.GUI();
-
+		
 		this.gui.add(this.scene, 'selectedObject', this.scene.objectList).onChange(this.scene.onSelectedObjectChanged.bind(this.scene)).name('Object Type');
 		this.gui.add(this.scene, 'wireframe').onChange(this.scene.onWireframeChanged.bind(this.scene));
 

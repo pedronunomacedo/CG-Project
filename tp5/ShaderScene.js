@@ -81,7 +81,6 @@ export class ShaderScene extends CGFscene {
 		this.texture4 = new CGFtexture(this, "textures/waterMap.jpg");
 
 		// shaders initialization
-
 		this.testShaders = [
 			new CGFshader(this.gl, "shaders/flat.vert", "shaders/flat.frag"),
 			new CGFshader(this.gl, "shaders/uScale.vert", "shaders/uScale.frag"),
