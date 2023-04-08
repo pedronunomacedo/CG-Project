@@ -1,4 +1,4 @@
-import {CGFobject} from '../../lib/CGF.js';
+import { CGFobject } from '../../lib/CGF.js';
 /**
 * MySphere
 * @constructor
@@ -60,17 +60,17 @@ export class MySphere extends CGFobject {
                     var currentPoint = lat * (this.longitudeSections + 1) + long; // next point on the same stack
                     var nextPoint = currentPoint + (this.longitudeSections + 1); // point on the other stack
 
-                    this.indices.push(currentPoint + 1, currentPoint, nextPoint);
-                    this.indices.push(currentPoint + 1, nextPoint + 1, nextPoint);
+                    this.indices.push(nextPoint, currentPoint, currentPoint + 1);
+                    this.indices.push(nextPoint, nextPoint + 1, currentPoint + 1);
                 }
 
                 // Normals
-                this.normals.push(x, y, z);
+                this.normals.push(-x, -y, -z);
 
                 currentMapLong += mapLongConst;
             }
-            currentMapLat += mapLatConst;
 
+            currentMapLat += mapLatConst;
         }
 		
 		this.primitiveType = this.scene.gl.TRIANGLE_STRIP;
@@ -78,14 +78,12 @@ export class MySphere extends CGFobject {
 	}
 
 	setFillMode() { 
-		this.primitiveType=this.scene.gl.TRIANGLES;
+		this.primitiveType = this.scene.gl.TRIANGLES;
 	}
 
-	setLineMode() 
-	{ 
-		this.primitiveType=this.scene.gl.LINE_STRIP;
+	setLineMode() { 
+		this.primitiveType = this.scene.gl.LINE_STRIP;
 	};
-
 }
 
 
