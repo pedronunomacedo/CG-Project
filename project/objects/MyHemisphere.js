@@ -6,7 +6,7 @@ import { CGFobject } from '../../lib/CGF.js';
  * @param slices - number of divisions in both directions of the surface
  * @param stacks - minimum texture coordinate in S
 */
-export class MySphere extends CGFobject {
+export class MyHemisphere extends CGFobject {
 	constructor(scene, slices, stacks) {
 		super(scene);
         // 1) One common way to define the vertices of a sphere is to use latitude and longitude values to create points on a sphere.
@@ -42,7 +42,7 @@ export class MySphere extends CGFobject {
             currentMapLong = 0;
             for (let long = 0; long <= this.longitudeSections; long++) {
                 // Angle of the slice on the stack
-                let theta = long * ((2 * Math.PI) / this.longitudeSections); // angle of the slice on the stack (Remove the "*2" in order to get a semisphere)
+                let theta = long * (Math.PI / this.longitudeSections); // angle of the slice on the stack (Remove the "*2" in order to get a semisphere)
                 let sinTheta = Math.sin(theta);
                 let cosTheta = Math.cos(theta);
 
