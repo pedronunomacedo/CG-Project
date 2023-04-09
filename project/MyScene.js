@@ -71,7 +71,7 @@ export class MyScene extends CGFscene {
       1.0,
       0.1,
       1000,
-      vec3.fromValues(50, 10, 15),
+      vec3.fromValues(110, 110, 110), // (50, 10, 15) -> You can change the value here in order to move the position of the camera (observer)
       vec3.fromValues(0, 0, 0)
     );
   }
