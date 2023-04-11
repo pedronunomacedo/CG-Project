@@ -68,10 +68,10 @@ export class MyScene extends CGFscene {
 
   initCameras() {
     this.camera = new CGFcamera(
-      1.0,
+      2.0,
       0.1,
       1000,
-      vec3.fromValues(110, 110, 110), // (50, 10, 15) -> You can change the value here in order to move the position of the camera (observer)
+      vec3.fromValues(50, 10, 15), // (50, 10, 15) -> You can change the value here in order to move the position of the camera (observer)
       vec3.fromValues(0, 0, 0)
     );
   }

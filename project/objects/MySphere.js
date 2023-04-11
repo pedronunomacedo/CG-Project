@@ -42,7 +42,7 @@ export class MySphere extends CGFobject {
             currentMapLong = 0;
             for (let long = 0; long <= this.longitudeSections; long++) {
                 // Angle of the slice on the stack
-                let theta = long * ((2 * Math.PI) / this.longitudeSections); // angle of the slice on the stack (Remove the "*2" in order to get a semisphere)
+                let theta = long * ((2 * Math.PI) / this.longitudeSections); // angle of the slice on the stack (Remove the "*2" in order to get a hemisphere)
                 let sinTheta = Math.sin(theta);
                 let cosTheta = Math.cos(theta);
 
@@ -56,10 +56,9 @@ export class MySphere extends CGFobject {
                 this.texCoords.push(currentMapLong, currentMapLat);
 
                 // Indices (the last latitude and ongitude is not done)
-                if (lat < this.latitudeSections && long < this.longitudeSections) {
-                    var currentPoint = lat * (this.longitudeSections + 1) + long; // next point on the same stack
-                    var nextPoint = currentPoint + (this.longitudeSections + 1); // point on the other stack
-
+                var currentPoint = lat * (this.longitudeSections + 1) + long; // next point on the same stack
+                var nextPoint = currentPoint + (this.longitudeSections + 1); // point on the other stack
+                if (lat < this.latitudeSections && long < this.longitudeSections + 1) {
                     this.indices.push(nextPoint, currentPoint, currentPoint + 1);
                     this.indices.push(nextPoint, nextPoint + 1, currentPoint + 1);
                 }
@@ -72,6 +71,17 @@ export class MySphere extends CGFobject {
 
             currentMapLat += mapLatConst;
         }
+
+        // Adicionar os polos da esfera (últimos vértices)
+        let poleNorthIndex = this.vertices.length / 3;
+        let poleSouthIndex = poleNorthIndex + 1;
+        this.vertices.push(0, 1, 0); // polo norte
+        this.vertices.push(0, -1, 0); // polo sul
+        this.normals.push(0, 1, 0); // normal do polo norte
+        this.normals.push(0, -1, 0); // normal do polo sul
+        this.texCoords.push(0, 0); // coordenadas de textura do polo norte
+        this.texCoords.push(0, 1); // coordenadas de textura do polo sul
+
 		
 		this.primitiveType = this.scene.gl.TRIANGLE_STRIP;
 		this.initGLBuffers();

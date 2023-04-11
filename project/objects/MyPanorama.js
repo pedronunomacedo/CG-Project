@@ -15,8 +15,8 @@ export class MyPanorama extends CGFobject {
         // Material only with ambiental light ("componente emissiva")
         this.tex = new CGFappearance(this.scene);
         this.tex.setAmbient(0.1, 0.1, 0.1, 1);
-        // this.tex.setDiffuse(0.9, 0.9, 0.9, 1);
-        // this.tex.setSpecular(0.1, 0.1, 0.1, 1);
+        this.tex.setDiffuse(0.9, 0.9, 0.9, 1);
+        this.tex.setSpecular(0.1, 0.1, 0.1, 1);
         this.tex.setShininess(10.0);
         this.tex.setTexture(this.CGFtex);
         this.tex.setTextureWrap('REPEAT', 'REPEAT');
@@ -37,7 +37,7 @@ export class MyPanorama extends CGFobject {
     display() {
         this.scene.pushMatrix();
         this.tex.apply();
-        this.scene.scale(200, 200, 200); // sphere radius = 200 with center = (0, 0, 0)
+        this.scene.scale(400, 400, 400); // sphere radius = 400 with center = (0, 0, 0)
         this.sphere.display();
         this.scene.popMatrix();
     }
