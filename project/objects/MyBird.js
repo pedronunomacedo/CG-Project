@@ -1,34 +1,124 @@
-import { CGFobject } from '../../lib/CGF.js';
-/**
-* MySphere
-* @constructor
- * @param scene - Reference to MyScene object
- * @param slices - number of divisions in both directions of the surface
- * @param stacks - minimum texture coordinate in S
-*/
+import { CGFobject, CGFappearance } from '../../lib/CGF.js';
+import { MyCone } from './MyCone.js';
+import { MyDiamond } from './MyDiamond.js';
+import { MySphere } from './MySphere.js';
+import { MyTriangPrism } from './MyTriangPrism.js';
+
+
+
 export class MyBird extends CGFobject {
-	constructor(scene, slices, stacks) {
+	constructor(scene) {
 		super(scene);
-        this.latitudeSections = stacks * 2; // The number of stacks refer only to an hemisphere. As the globe has 2 hemisphere, we willl have a total number of (stacks * 2) as latitude. 
-        this.longitudeSections = slices; // The number of slices a stack has.
+
+		//this.cilinder = new MyCylinder(scene, 100, 100);
+		this.sphere1 = new MySphere(scene, 8, 8);
+		this.sphere2 = new MySphere(scene, 8, 8);
+		this.sphere3 = new MySphere(scene, 100, 100);
+		this.sphere4 = new MySphere(scene, 100, 100);
+		this.cone1 = new MyCone(scene, 100, 100);
+		this.cone2 = new MyCone(scene, 100, 100);
+		this.diamond = new MyDiamond(scene);
+		this.triangPrism = new MyTriangPrism(scene);
 
 		this.initBuffers();
+
+		this.color = new CGFappearance(scene);
+        this.color.setAmbient(1, 1, 1, 1.0);
+        this.color.setDiffuse(0.8, 0.6, 0.5, 1.0);
+        this.color.setSpecular(0, 0, 0, 1.0);
+        this.color.setShininess(10.0);
 	}
 
-	initBuffers() {
-		// Generate vertices, normals, and texCoords
-		
-		this.primitiveType = this.scene.gl.TRIANGLE_STRIP;
-		this.initGLBuffers();
-	}
+	display() {
+		this.color.apply();
 
-	setFillMode() { 
-		this.primitiveType = this.scene.gl.TRIANGLES;
-	}
+		// CORPO
+		this.scene.pushMatrix();
+		this.scene.rotate(1/4*Math.PI, 1, 0, 0);
+        this.scene.translate(0, 1.7, 0.8);
+		this.scene.scale(0.5, 0.5, 1);
+		this.sphere1.display();
+		this.scene.popMatrix();
 
-	setLineMode() { 
-		this.primitiveType = this.scene.gl.LINE_STRIP;
-	};
+		// CABECA
+		this.scene.pushMatrix();
+        this.scene.translate(0, 1.5, 1.2);
+		this.scene.rotate(1/4*Math.PI, 1, 0, 0);
+		this.scene.scale(0.3, 0.3, 0.4);
+		this.sphere2.display();
+		this.scene.popMatrix();
+
+		// OLHO-1
+		this.scene.pushMatrix();
+		this.scene.translate(-0.1, 1.6, 0.9);
+		this.scene.scale(0.05, 0.05, 0.05);
+		this.sphere3.display();
+		this.scene.popMatrix();
+
+		// OLHO-2
+		this.scene.pushMatrix();
+		this.scene.translate(0.1, 1.6, 0.9);
+		this.scene.scale(0.05, 0.05, 0.05);
+		this.sphere4.display();
+		this.scene.popMatrix();
+
+		// BICO
+		this.scene.pushMatrix();
+		this.scene.translate(0, 1.5, 0.9);
+		this.scene.rotate(-1/2*Math.PI, 1, 0, 0);
+		this.scene.scale(0.08, 0.4, 0.08);
+		this.cone1.display();
+		this.scene.popMatrix();
+
+		// CAUDA
+		this.scene.pushMatrix();
+		this.scene.translate(0, 0.4, 2);
+		this.scene.rotate(3/5*Math.PI, 1, 0, 0);
+		this.scene.scale(0.4, 1, 0.45);
+		this.cone2.display();
+		this.scene.popMatrix();
+
+		// ASA-1
+		this.scene.pushMatrix();
+		this.scene.translate(0.6, 0.8, 1.7);
+		this.scene.rotate(1/4*Math.PI, 1, 0, 0);
+		this.scene.scale(0.9, 0.2, 0.9);
+		this.scene.rotate(1/2*Math.PI, 1, 0, 0);
+		this.triangPrism.display();
+		this.scene.popMatrix();
+
+		// ASA-2
+		this.scene.pushMatrix();
+		this.scene.translate(-0.6, 0.8, 1.7);
+		this.scene.rotate(1/4*Math.PI, 1, 0, 0);
+		this.scene.scale(0.9, 0.2, 0.9);
+		this.scene.rotate(-1/2*Math.PI, 0, 1, 0);
+		this.scene.rotate(1/2*Math.PI, 1, 0, 0);
+		this.triangPrism.display();
+		this.scene.popMatrix();
+
+		// ASA-1-2
+		this.scene.pushMatrix();
+		this.scene.translate(1.2, 0.65, 1.9);
+		this.scene.rotate(1/4*Math.PI, 1, 0, 0);
+		this.scene.rotate(1/4*Math.PI, 0, 1, 0);
+		this.scene.scale(-0.6, 0.2, 1.2);
+		this.scene.rotate(1/2*Math.PI, 1, 0, 0);
+		this.triangPrism.display();
+		this.scene.popMatrix();
+
+		// ASA-2-2
+		this.scene.pushMatrix();
+		this.scene.scale(-1, 1, 1);
+		this.scene.translate(1.2, 0.65, 1.9);
+		this.scene.rotate(1/4*Math.PI, 1, 0, 0);
+		this.scene.rotate(1/4*Math.PI, 0, 1, 0);
+		this.scene.scale(-0.6, 0.2, 1.2);
+		this.scene.rotate(1/2*Math.PI, 1, 0, 0);
+		this.triangPrism.display();
+		this.scene.popMatrix();
+
+	}
 }
 
 
