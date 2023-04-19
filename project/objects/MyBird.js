@@ -7,7 +7,7 @@ import { MyTriangPrism } from './MyTriangPrism.js';
 
 
 export class MyBird extends CGFobject {
-	constructor(scene) {
+	constructor(scene, xPos, yPos, zPos, direction, speed) {
 		super(scene);
 
 		//this.cilinder = new MyCylinder(scene, 100, 100);
@@ -27,6 +27,14 @@ export class MyBird extends CGFobject {
         this.color.setDiffuse(0.8, 0.6, 0.5, 1.0);
         this.color.setSpecular(0, 0, 0, 1.0);
         this.color.setShininess(10.0);
+
+		this.wingAngle = Math.PI/8;
+
+		this.xPos = 0;
+		this.yPos = 0;
+		this.zPos = 0;
+		this.speed = speed;
+		this.direction = direction;
 	}
 
 	display() {
@@ -118,6 +126,26 @@ export class MyBird extends CGFobject {
 		this.triangPrism.display();
 		this.scene.popMatrix();
 
+	}
+
+	turn(angle) {
+		this.direction = (this.direction + angle) % ( 2 * Math.PI);
+	}
+
+	accelerate(speed) {
+		this.speed += speed;
+	}
+
+	move() {
+		this.xPos += this.speed * Math.cos(this.direction);
+		this.zPos += this.speed * Math.sin(this.direction);
+	}
+
+	reset() {
+		this.xPos = 0;
+		this.zPos = 0;
+		this.direction = 0;
+		this.speed = 0;
 	}
 }
 

@@ -1,6 +1,7 @@
 import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFshader, CGFtexture } from "../lib/CGF.js";
 import { MyPlane } from "./MyPlane.js";
 import { MyBird } from "./objects/MyBird.js";
+import { MyDiamond } from "./objects/MyDiamond.js";
 import { MyPanorama } from "./objects/MyPanorama.js";
 import { MySphere } from "./objects/MySphere.js";
 
@@ -44,7 +45,8 @@ export class MyScene extends CGFscene {
     this.plane = new MyPlane(this,30);
     this.sphere = new MySphere(this, 16, 8);
     this.panorama = new MyPanorama(this, this.textures[this.selectedTexture]);
-    this.bird = new MyBird(this);
+    this.bird = new MyBird(this, 0, 0, 0, 0, 0);
+    this.diamond = new MyDiamond(this);
 
     //Objects connected to MyInterface
     this.displayAxis = true;
@@ -52,6 +54,7 @@ export class MyScene extends CGFscene {
     this.displaySphere = false;
     this.displayPanorama = true;
     this.scaleFactor = 1;
+    this.speedFactor = 1;
 
     this.enableTextures(true);
 
@@ -59,6 +62,8 @@ export class MyScene extends CGFscene {
     this.appearance = new CGFappearance(this);
     this.appearance.setTexture(this.texture);
     this.appearance.setTextureWrap('REPEAT', 'REPEAT');
+
+    this.setUpdatePeriod(10);
   }
 
   initLights() {
@@ -87,6 +92,49 @@ export class MyScene extends CGFscene {
 
   onSelectedTextureChanged(v) {
     this.panorama.setTexture(this.textures[this.selectedTexture]);
+  }
+
+  checkKeys() {
+    var text = "Keys pressed: ";
+    var keysPressed = false;
+
+    // Check for key codes e.g. in https://keycode.info/
+    if (this.gui.isKeyPressed("KeyW")) {
+      text+=" W ";
+      keysPressed=true;
+      this.bird.accelerate(0.01*this.speedFactor);
+    }
+    if (this.gui.isKeyPressed("KeyS")) {
+      text+=" S ";
+      keysPressed=true;
+      this.bird.accelerate(-0.01*this.speedFactor);
+    }
+    if (this.gui.isKeyPressed("KeyA")) {
+      text+=" A ";
+      keysPressed=true;
+      this.bird.turn(-0.05*this.speedFactor);
+    }
+    if (this.gui.isKeyPressed("KeyD")) {
+      text+=" D ";
+      keysPressed=true;
+      this.bird.turn(0.05*this.speedFactor);
+    }
+    if (this.gui.isKeyPressed("KeyR")) {
+      text+=" R ";
+      keysPressed=true;
+      this.bird.reset();
+    }
+    if (keysPressed)
+      console.log(text);
+  }
+
+  update(t) {
+    this.checkKeys();
+
+    this.bird.move();
+
+    this.bird.yPos = Math.cos((t*this.speedFactor) / 200)/10;
+    this.bird.wingAngle = (Math.PI/4 + Math.cos((t*this.speedFactor) / 200)) % Math.PI/4;
   }
   
   display() {
@@ -129,7 +177,23 @@ export class MyScene extends CGFscene {
       this.popMatrix();
     }
     
+    this.pushMatrix();
+    this.translate(0, 3, 0);
+    this.scale(0.8, 0.8, 0.8);
     this.bird.display();
+    this.popMatrix();
+
+    // this.pushMatrix();
+		// this.translate(-1.5, 0, 1);
+    // this.rotate(1/2*Math.PI, 0, 1, 0);
+		// this.diamond.display();
+		// this.popMatrix();
+
+		// this.pushMatrix();
+		// this.translate(1.5, 0, 1);
+    // this.rotate(1/2*Math.PI, 0, 1, 0);
+		// this.diamond.display();
+		// this.popMatrix();
 
     // ---- END Primitive drawing section
   }
