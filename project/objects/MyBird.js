@@ -23,10 +23,10 @@ export class MyBird extends CGFobject {
 		this.initBuffers();
 
 		this.color = new CGFappearance(scene);
-        this.color.setAmbient(1, 1, 1, 1.0);
-        this.color.setDiffuse(0.8, 0.6, 0.5, 1.0);
-        this.color.setSpecular(0, 0, 0, 1.0);
-        this.color.setShininess(10.0);
+        //this.color.setAmbient(1, 0, 0, 1.0);
+        //this.color.setDiffuse(0.8, 0.6, 0.5, 1.0);
+        //this.color.setSpecular(0, 0, 0, 1.0);
+        //this.color.setShininess(10.0);
 
 		this.wingAngle = Math.PI/8;
 
@@ -39,6 +39,12 @@ export class MyBird extends CGFobject {
 
 	display() {
 		this.color.apply();
+
+		this.scene.pushMatrix();
+		this.scene.translate(this.xPos, this.yPos, this.zPos);
+		this.scene.rotate(-this.direction, 0, 1, 0);
+		this.scene.rotate(-Math.PI/2, 0, 1, 0);
+		this.scene.rotate(-Math.PI * 0.1, 1, 0, 0);
 
 		// CORPO
 		this.scene.pushMatrix();
@@ -88,8 +94,10 @@ export class MyBird extends CGFobject {
 
 		// ASA-1
 		this.scene.pushMatrix();
+		//this.scene.rotate(-this.wingAngle, 1, 0, 0);
 		this.scene.translate(0.6, 0.8, 1.7);
 		this.scene.rotate(1/4*Math.PI, 1, 0, 0);
+		this.scene.rotate(-this.wingAngle, 0, 0, 1);
 		this.scene.scale(0.9, 0.2, 0.9);
 		this.scene.rotate(1/2*Math.PI, 1, 0, 0);
 		this.triangPrism.display();
@@ -97,8 +105,10 @@ export class MyBird extends CGFobject {
 
 		// ASA-2
 		this.scene.pushMatrix();
+		//this.scene.rotate(-this.wingAngle, 1, 0, 0);
 		this.scene.translate(-0.6, 0.8, 1.7);
 		this.scene.rotate(1/4*Math.PI, 1, 0, 0);
+		this.scene.rotate(-this.wingAngle, 0, 0, 1);
 		this.scene.scale(0.9, 0.2, 0.9);
 		this.scene.rotate(-1/2*Math.PI, 0, 1, 0);
 		this.scene.rotate(1/2*Math.PI, 1, 0, 0);
@@ -107,9 +117,11 @@ export class MyBird extends CGFobject {
 
 		// ASA-1-2
 		this.scene.pushMatrix();
+		//this.scene.rotate(-this.wingAngle, 1, 0, 0);
 		this.scene.translate(1.2, 0.65, 1.9);
 		this.scene.rotate(1/4*Math.PI, 1, 0, 0);
 		this.scene.rotate(1/4*Math.PI, 0, 1, 0);
+		this.scene.rotate(-this.wingAngle*4, 0, 0, 1);
 		this.scene.scale(-0.6, 0.2, 1.2);
 		this.scene.rotate(1/2*Math.PI, 1, 0, 0);
 		this.triangPrism.display();
@@ -117,13 +129,17 @@ export class MyBird extends CGFobject {
 
 		// ASA-2-2
 		this.scene.pushMatrix();
+		//this.scene.rotate(-this.wingAngle, 1, 0, 0);
 		this.scene.scale(-1, 1, 1);
 		this.scene.translate(1.2, 0.65, 1.9);
 		this.scene.rotate(1/4*Math.PI, 1, 0, 0);
 		this.scene.rotate(1/4*Math.PI, 0, 1, 0);
+		this.scene.rotate(-this.wingAngle*4, 0, 0, 1);
 		this.scene.scale(-0.6, 0.2, 1.2);
 		this.scene.rotate(1/2*Math.PI, 1, 0, 0);
 		this.triangPrism.display();
+		this.scene.popMatrix();
+
 		this.scene.popMatrix();
 
 	}

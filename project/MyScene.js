@@ -46,7 +46,7 @@ export class MyScene extends CGFscene {
     this.sphere = new MySphere(this, 16, 8);
     this.panorama = new MyPanorama(this, this.textures[this.selectedTexture]);
     this.bird = new MyBird(this, 0, 0, 0, 0, 0);
-    this.diamond = new MyDiamond(this);
+    //this.diamond = new MyDiamond(this);
 
     //Objects connected to MyInterface
     this.displayAxis = true;
@@ -134,7 +134,7 @@ export class MyScene extends CGFscene {
     this.bird.move();
 
     this.bird.yPos = Math.cos((t*this.speedFactor) / 200)/10;
-    this.bird.wingAngle = (Math.PI/4 + Math.cos((t*this.speedFactor) / 200)) % Math.PI/4;
+    this.bird.wingAngle = (Math.PI/16 + Math.cos((t*this.speedFactor) / 200)) % Math.PI/16;
   }
   
   display() {
