@@ -153,7 +153,6 @@ export class ShaderScene extends CGFscene {
 	
 	// initialize lights
 	initLights() {
-
 		if (this.lights.length > 0) {
 			this.lights[0].setPosition(0, 0, 10, 1);
 			this.lights[0].setAmbient(0.2, 0.2, 0.2, 1);

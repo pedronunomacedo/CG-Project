@@ -13,6 +13,7 @@ export class MyScene extends CGFscene {
   constructor() {
     super();
     this.selectedTexture = 0;
+    this.selectedExampleShader = 0;
   }
   init(application) {
     super.init(application);
@@ -63,6 +64,20 @@ export class MyScene extends CGFscene {
     this.appearance.setTexture(this.texture);
     this.appearance.setTextureWrap('REPEAT', 'REPEAT');
 
+		this.appearance.setTexture(this.texture);
+		this.appearance.setTextureWrap('REPEAT', 'REPEAT');
+
+		this.texture2 = new CGFtexture(this, "images/heightmap.jpg");
+		this.texture3 = new CGFtexture(this, "images/altimetry.png");
+
+
+    this.testShaders = [
+			new CGFshader(this.gl, "shaders/height.vert", "shaders/height.frag"),
+		];
+
+    this.testShaders[0].setUniformsValues({ uSampler2: 1 , uSampler3: 2});
+
+
     this.setUpdatePeriod(10);
   }
 
@@ -78,7 +93,7 @@ export class MyScene extends CGFscene {
       2.0,
       0.1,
       1000,
-      vec3.fromValues(50, 10, 15), // (50, 10, 15) -> You can change the value here in order to move the position of the camera (observer)
+      vec3.fromValues(50, 50, 0), // (50, 10, 15) -> You can change the value here in order to move the position of the camera (observer)
       vec3.fromValues(0, 0, 0)
     );
   }
@@ -135,6 +150,8 @@ export class MyScene extends CGFscene {
 
     this.bird.yPos = Math.cos((t*this.speedFactor) / 200)/10;
     this.bird.wingAngle = (Math.PI/16 + Math.cos((t*this.speedFactor) / 200)) % Math.PI/16;
+
+    
   }
   
   display() {
@@ -152,6 +169,12 @@ export class MyScene extends CGFscene {
     // Draw axis
     if (this.displayAxis) this.axis.display();
 
+    // bind additional texture to textures unit
+		this.texture2.bind(1);
+		this.texture3.bind(2);
+
+    this.setActiveShader(this.testShaders[0]);
+    this.appearance.apply();
     // ---- BEGIN Primitive drawing section
 
     if (this.displayPlane) {
@@ -163,6 +186,8 @@ export class MyScene extends CGFscene {
       this.plane.display();
       this.popMatrix();
     }
+
+    this.setActiveShader(this.defaultShader);
 
     if (this.displaySphere) {
       this.pushMatrix();
