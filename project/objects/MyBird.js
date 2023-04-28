@@ -68,10 +68,10 @@ export class MyBird extends CGFobject {
 	display() {
 		this.scene.pushMatrix();
 
-			// this.scene.translate(this.xPos, this.yPos, this.zPos);
-			// this.scene.rotate(-this.direction, 0, 1, 0);
-			// this.scene.rotate(-Math.PI/2, 0, 1, 0);
-			// this.scene.rotate(-Math.PI * 0.1, 1, 0, 0);
+			this.scene.translate(this.xPos, this.yPos, this.zPos);
+			this.scene.rotate(-this.direction, 0, 1, 0);
+			this.scene.rotate(-Math.PI/2, 0, 1, 0);
+			this.scene.rotate(-Math.PI * 0.1, 1, 0, 0);
 			this.bodyTexture.apply();
 
 			// CORPO
@@ -161,15 +161,6 @@ export class MyBird extends CGFobject {
 				this.scene.scale(0.05, 0.05, 0.05);
 				this.sphere4.display();
 			this.scene.popMatrix();
-
-			// CAUDA
-			// this.tailTexture.apply();
-			// this.scene.pushMatrix();
-			// 	this.scene.translate(0, 0.4, 2);
-			// 	this.scene.rotate(3/5*Math.PI, 1, 0, 0);
-			// 	this.scene.scale(0.4, 1, 0.45);
-			// 	this.cone2.display();
-			// this.scene.popMatrix();
 
 			// CAUDA
 			this.tailTexture.apply();
