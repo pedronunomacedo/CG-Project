@@ -41,15 +41,15 @@ export class MyScene extends CGFscene {
     };
     //-------
 
-    //Initialize scene objects
+    // Initialize scene objects
     this.axis = new CGFaxis(this);
     this.plane = new MyPlane(this,30);
     this.sphere = new MySphere(this, 16, 8);
     this.panorama = new MyPanorama(this, this.textures[this.selectedTexture]);
-    this.bird = new MyBird(this, 0, 0, 0, 0, 0);
+    this.bird = new MyBird(this, 0, 0, 0, 0, 0, [0, 0.256, 1]);
     //this.diamond = new MyDiamond(this);
 
-    //Objects connected to MyInterface
+    // Objects connected to MyInterface
     this.displayAxis = true;
     this.displayPlane = false;
     this.displaySphere = false;
@@ -59,24 +59,24 @@ export class MyScene extends CGFscene {
 
     this.enableTextures(true);
 
+    
+    // Textures
     this.texture = new CGFtexture(this, "images/terrain.jpg");
-    this.appearance = new CGFappearance(this);
-    this.appearance.setTexture(this.texture);
-    this.appearance.setTextureWrap('REPEAT', 'REPEAT');
-
-		this.appearance.setTexture(this.texture);
-		this.appearance.setTextureWrap('REPEAT', 'REPEAT');
-
 		this.texture2 = new CGFtexture(this, "images/heightmap.jpg");
 		this.texture3 = new CGFtexture(this, "images/altimetry.png");
 
+    // Appearance
+    this.appearance = new CGFappearance(this);
+    this.appearance.setTexture(this.texture);
+    this.appearance.setTextureWrap('REPEAT', 'REPEAT');
+		this.appearance.setTexture(this.texture);
+		this.appearance.setTextureWrap('REPEAT', 'REPEAT');
 
+    // Shaders
     this.testShaders = [
 			new CGFshader(this.gl, "shaders/height.vert", "shaders/height.frag"),
 		];
-
     this.testShaders[0].setUniformsValues({ uSampler2: 1 , uSampler3: 2});
-
 
     this.setUpdatePeriod(10);
   }
@@ -90,10 +90,10 @@ export class MyScene extends CGFscene {
 
   initCameras() {
     this.camera = new CGFcamera(
-      2.0,
+      1.5,
       0.1,
       1000,
-      vec3.fromValues(50, 50, 0), // (50, 10, 15) -> You can change the value here in order to move the position of the camera (observer)
+      vec3.fromValues(50, 10, 15), // (50, 10, 15) -> You can change the value here in order to move the position of the camera (observer)
       vec3.fromValues(0, 0, 0)
     );
   }
@@ -147,11 +147,9 @@ export class MyScene extends CGFscene {
     this.checkKeys();
 
     this.bird.move();
-
-    this.bird.yPos = Math.cos((t*this.speedFactor) / 200)/10;
+    // this.bird.yPos = Math.cos((t*this.speedFactor) / 200) / 5;
     this.bird.wingAngle = (Math.PI/16 + Math.cos((t*this.speedFactor) / 200)) % Math.PI/16;
-
-    
+    this.bird.tailAngle = (Math.PI/16 + Math.cos((t*this.speedFactor) / 200)) % Math.PI/16;
   }
   
   display() {
@@ -203,22 +201,10 @@ export class MyScene extends CGFscene {
     }
     
     this.pushMatrix();
-    this.translate(0, 3, 0);
+    // this.translate(0, 3, 0);
     this.scale(0.8, 0.8, 0.8);
     this.bird.display();
     this.popMatrix();
-
-    // this.pushMatrix();
-		// this.translate(-1.5, 0, 1);
-    // this.rotate(1/2*Math.PI, 0, 1, 0);
-		// this.diamond.display();
-		// this.popMatrix();
-
-		// this.pushMatrix();
-		// this.translate(1.5, 0, 1);
-    // this.rotate(1/2*Math.PI, 0, 1, 0);
-		// this.diamond.display();
-		// this.popMatrix();
 
     // ---- END Primitive drawing section
   }
