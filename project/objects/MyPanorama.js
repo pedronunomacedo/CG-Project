@@ -7,7 +7,7 @@ export class MyPanorama extends CGFobject {
 
         this.scene = scene;
         this.CGFtex = CGFtex;
-        this.sphere = new MySphere(this.scene, 16, 8);
+        this.sphere = new MySphere(this.scene, 16, 8, 0);
         this.initObjects();
     }
 
@@ -37,6 +37,7 @@ export class MyPanorama extends CGFobject {
     display() {
         this.scene.pushMatrix();
         this.tex.apply();
+        this.scene.translate(this.scene.camera.position[0], this.scene.camera.position[1], this.scene.camera.position[2]);
         this.scene.scale(400, 400, 400); // sphere radius = 400 with center = (0, 0, 0)
         this.sphere.display();
         this.scene.popMatrix();

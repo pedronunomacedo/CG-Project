@@ -11,10 +11,10 @@ export class MyBird extends CGFobject {
 		super(scene);
 
 		//this.cilinder = new MyCylinder(scene, 100, 100);
-		this.sphere1 = new MySphere(scene, 8, 8);
-		this.sphere2 = new MySphere(scene, 8, 8);
-		this.sphere3 = new MySphere(scene, 100, 100);
-		this.sphere4 = new MySphere(scene, 100, 100);
+		this.sphere1 = new MySphere(scene, 8, 8, 1);
+		this.sphere2 = new MySphere(scene, 8, 8, 1);
+		this.sphere3 = new MySphere(scene, 100, 100, 1);
+		this.sphere4 = new MySphere(scene, 100, 100, 1);
 		this.cone1 = new MyCone(scene, 100, 100);
 		this.cone2 = new MyCone(scene, 100, 100);
 		this.diamond = new MyDiamond(scene);
@@ -23,10 +23,10 @@ export class MyBird extends CGFobject {
 		this.initBuffers();
 
 		this.color = new CGFappearance(scene);
-        //this.color.setAmbient(1, 0, 0, 1.0);
-        //this.color.setDiffuse(0.8, 0.6, 0.5, 1.0);
-        //this.color.setSpecular(0, 0, 0, 1.0);
-        //this.color.setShininess(10.0);
+        this.color.setAmbient(1, 0, 0, 1.0);
+        this.color.setDiffuse(0.8, 0.6, 0.5, 1.0);
+        this.color.setSpecular(0, 0, 0, 1.0);
+        this.color.setShininess(10.0);
 
 		this.wingAngle = Math.PI/8;
 
@@ -97,7 +97,7 @@ export class MyBird extends CGFobject {
 		//this.scene.rotate(-this.wingAngle, 1, 0, 0);
 		this.scene.translate(0.6, 0.8, 1.7);
 		this.scene.rotate(1/4*Math.PI, 1, 0, 0);
-		this.scene.rotate(-this.wingAngle, 0, 0, 1);
+		this.scene.rotate(-this.wingAngle*2, 0, 0, 1);
 		this.scene.scale(0.9, 0.2, 0.9);
 		this.scene.rotate(1/2*Math.PI, 1, 0, 0);
 		this.triangPrism.display();
@@ -108,7 +108,7 @@ export class MyBird extends CGFobject {
 		//this.scene.rotate(-this.wingAngle, 1, 0, 0);
 		this.scene.translate(-0.6, 0.8, 1.7);
 		this.scene.rotate(1/4*Math.PI, 1, 0, 0);
-		this.scene.rotate(-this.wingAngle, 0, 0, 1);
+		this.scene.rotate(this.wingAngle*2, 0, 0, 1);
 		this.scene.scale(0.9, 0.2, 0.9);
 		this.scene.rotate(-1/2*Math.PI, 0, 1, 0);
 		this.scene.rotate(1/2*Math.PI, 1, 0, 0);
