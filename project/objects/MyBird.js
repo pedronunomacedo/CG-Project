@@ -10,16 +10,16 @@ export class MyBird extends CGFobject {
 		super(scene);
 
 		// Bird elements
-		this.sphere1 = new MySphere(scene, 8, 8);
-		this.sphere2 = new MySphere(scene, 8, 8);
-		this.sphere3 = new MySphere(scene, 100, 100);
-		this.sphere4 = new MySphere(scene, 100, 100);
+		this.sphere1 = new MySphere(scene, 8, 8, 1);
+		this.sphere2 = new MySphere(scene, 8, 8, 1);
+		this.sphere3 = new MySphere(scene, 100, 100, 1);
+		this.sphere4 = new MySphere(scene, 100, 100, 1);
 		this.cone1 = new MyCone(scene, 100, 100);
 		//this.cone2 = new MyCone(scene, 100, 100);
 		this.triangleObtuse1 = new MyTriangle(scene, 1);
 		this.triangleObtuse2 = new MyTriangle(scene, 2);
 		this.diamond = new MyDiamond(scene);
-		this.wing = new MySphere(scene, 10, 10);
+		this.wing = new MySphere(scene, 10, 10, 1);
 
 		this.initBuffers();
 		this.initMaterials();
@@ -42,6 +42,7 @@ export class MyBird extends CGFobject {
 		this.bodyTexture.setSpecular(0, 0, 0, 1.0);
 		this.bodyTexture.setShininess(10);
 		this.bodyTexture.setTexture(new CGFtexture(this.scene, "images/bird/birdBody.jpg"));
+		this.bodyTexture.setTextureWrap('REPEAT', 'REPEAT');
 
 		this.beakTexture = new CGFappearance(this.scene);
 		this.beakTexture.setAmbient(3, 3, 3, 1.0);
@@ -49,6 +50,7 @@ export class MyBird extends CGFobject {
 		this.beakTexture.setSpecular(0, 0, 0, 1.0);
 		this.beakTexture.setShininess(10);
 		this.beakTexture.setTexture(new CGFtexture(this.scene, "images/bird/birdBeak.jpg"));
+		this.bodyTexture.setTextureWrap('REPEAT', 'REPEAT');
 
 		this.eyeTexture = new CGFappearance(this.scene);
 		this.eyeTexture.setAmbient(3, 3, 3, 1.0);
@@ -56,6 +58,7 @@ export class MyBird extends CGFobject {
 		this.eyeTexture.setSpecular(0, 0, 0, 1.0);
 		this.eyeTexture.setShininess(10);
 		this.eyeTexture.setTexture(new CGFtexture(this.scene, "images/bird/birdEye.jpg"));
+		this.bodyTexture.setTextureWrap('REPEAT', 'REPEAT');
 
 		this.tailTexture = new CGFappearance(this.scene);
 		this.tailTexture.setAmbient(3, 3, 3, 1.0);
@@ -149,7 +152,7 @@ export class MyBird extends CGFobject {
 			this.eyeTexture.apply();
 			this.scene.pushMatrix();
 				this.scene.translate(-0.1, 1.6, 0.9);
-				this.scene.rotate(-1/2*Math.PI, 0, 1, 0);
+				//this.scene.rotate(-1/2*Math.PI, 0, 1, 0);
 				this.scene.scale(0.05, 0.05, 0.05);
 				this.sphere3.display();
 			this.scene.popMatrix();
@@ -157,7 +160,7 @@ export class MyBird extends CGFobject {
 			// OLHO-2
 			this.scene.pushMatrix();
 				this.scene.translate(0.1, 1.6, 0.9);
-				this.scene.rotate(-1/2*Math.PI, 0, 1, 0);
+				//this.scene.rotate(-1/2*Math.PI, 0, 1, 0);
 				this.scene.scale(0.05, 0.05, 0.05);
 				this.sphere4.display();
 			this.scene.popMatrix();

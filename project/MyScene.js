@@ -1,9 +1,10 @@
 import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFshader, CGFtexture } from "../lib/CGF.js";
 import { MyPlane } from "./MyPlane.js";
 import { MyBird } from "./objects/MyBird.js";
-import { MyDiamond } from "./objects/MyDiamond.js";
 import { MyPanorama } from "./objects/MyPanorama.js";
 import { MySphere } from "./objects/MySphere.js";
+import { MyBirdEgg } from "./objects/MyBirdEgg.js";
+
 
 /**
  * MyScene
@@ -12,7 +13,7 @@ import { MySphere } from "./objects/MySphere.js";
 export class MyScene extends CGFscene {
   constructor() {
     super();
-    this.selectedTexture = 0;
+    this.selectedTexture = 1;
     this.selectedExampleShader = 0;
   }
   init(application) {
@@ -44,14 +45,20 @@ export class MyScene extends CGFscene {
     // Initialize scene objects
     this.axis = new CGFaxis(this);
     this.plane = new MyPlane(this,30);
-    this.sphere = new MySphere(this, 16, 8);
+    this.sphere = new MySphere(this, 16, 8, 0);
     this.panorama = new MyPanorama(this, this.textures[this.selectedTexture]);
     this.bird = new MyBird(this, 0, 0, 0, 0, 0, [0, 0.256, 1]);
+    this.egg1 = new MyBirdEgg(this, 0, 0, 0);
+    this.egg2 = new MyBirdEgg(this, 0, 0, 3);
+    this.egg3 = new MyBirdEgg(this, 0, 0, 6);
+    this.egg4 = new MyBirdEgg(this, 0, 0, 9);
+
+    this.birdEgg = new MyBirdEgg(this);
     //this.diamond = new MyDiamond(this);
 
     // Objects connected to MyInterface
     this.displayAxis = true;
-    this.displayPlane = false;
+    this.displayPlane = true;
     this.displaySphere = false;
     this.displayPanorama = true;
     this.scaleFactor = 1;
@@ -204,6 +211,10 @@ export class MyScene extends CGFscene {
     // this.translate(0, 3, 0);
     this.scale(0.8, 0.8, 0.8);
     this.bird.display();
+    this.egg1.display();
+    this.egg2.display();
+    this.egg3.display();
+    this.egg4.display();
     this.popMatrix();
 
     // ---- END Primitive drawing section
