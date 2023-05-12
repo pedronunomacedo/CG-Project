@@ -43,7 +43,6 @@ export class MyHemisphere extends CGFobject {
             for (let long = 0; long <= this.longitudeSections; long++) {
                 // Angle of the slice on the stack
                 let theta = long * (Math.PI / this.longitudeSections); // angle of the slice on the stack (Remove the "*2" in order to get a semisphere)
-                let sinTheta = Math.sin(theta);
                 let cosTheta = Math.cos(theta);
 
                 // Vertice coordinates

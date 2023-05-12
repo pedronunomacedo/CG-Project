@@ -1,9 +1,11 @@
 import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFshader, CGFtexture } from "../lib/CGF.js";
 import { MyPlane } from "./MyPlane.js";
 import { MyBird } from "./objects/MyBird.js";
-import { MyDiamond } from "./objects/MyDiamond.js";
 import { MyPanorama } from "./objects/MyPanorama.js";
 import { MySphere } from "./objects/MySphere.js";
+import { MyBirdEgg } from "./objects/MyBirdEgg.js";
+import { MyNest } from "./objects/MyNest.js";
+
 
 /**
  * MyScene
@@ -12,7 +14,7 @@ import { MySphere } from "./objects/MySphere.js";
 export class MyScene extends CGFscene {
   constructor() {
     super();
-    this.selectedTexture = 0;
+    this.selectedTexture = 1;
     this.selectedExampleShader = 0;
   }
   init(application) {
@@ -41,42 +43,45 @@ export class MyScene extends CGFscene {
     };
     //-------
 
-    //Initialize scene objects
+    // Initialize scene objects
     this.axis = new CGFaxis(this);
-    this.plane = new MyPlane(this,30);
-    this.sphere = new MySphere(this, 16, 8);
+    this.plane = new MyPlane(this, 30);
+    this.sphere = new MySphere(this, 16, 8, 0);
     this.panorama = new MyPanorama(this, this.textures[this.selectedTexture]);
-    this.bird = new MyBird(this, 0, 0, 0, 0, 0);
-    //this.diamond = new MyDiamond(this);
+    this.bird = new MyBird(this, 20, -20, 70, 0, 0, [0, 0.256, 1]); // in the same z as the first egg
+    this.nest = new MyNest(this, 20, -51.3, 55); // y = -51.3
 
-    //Objects connected to MyInterface
+    // Objects connected to MyInterface
     this.displayAxis = true;
-    this.displayPlane = false;
+    this.displayPlane = true;
     this.displaySphere = false;
     this.displayPanorama = true;
+    this.displayBird = true;
+    this.displayEggs = true;
+    this.displayNest = true;
     this.scaleFactor = 1;
     this.speedFactor = 1;
 
     this.enableTextures(true);
 
+    
+    // Textures
     this.texture = new CGFtexture(this, "images/terrain.jpg");
-    this.appearance = new CGFappearance(this);
-    this.appearance.setTexture(this.texture);
-    this.appearance.setTextureWrap('REPEAT', 'REPEAT');
-
-		this.appearance.setTexture(this.texture);
-		this.appearance.setTextureWrap('REPEAT', 'REPEAT');
-
 		this.texture2 = new CGFtexture(this, "images/heightmap.jpg");
 		this.texture3 = new CGFtexture(this, "images/altimetry.png");
 
+    // Appearance
+    this.appearance = new CGFappearance(this);
+    this.appearance.setTexture(this.texture);
+    this.appearance.setTextureWrap('REPEAT', 'REPEAT');
+		this.appearance.setTexture(this.texture);
+		this.appearance.setTextureWrap('REPEAT', 'REPEAT');
 
+    // Shaders
     this.testShaders = [
 			new CGFshader(this.gl, "shaders/height.vert", "shaders/height.frag"),
 		];
-
     this.testShaders[0].setUniformsValues({ uSampler2: 1 , uSampler3: 2});
-
 
     this.setUpdatePeriod(10);
   }
@@ -90,10 +95,10 @@ export class MyScene extends CGFscene {
 
   initCameras() {
     this.camera = new CGFcamera(
-      2.0,
+      1.5,
       0.1,
       1000,
-      vec3.fromValues(50, 50, 0), // (50, 10, 15) -> You can change the value here in order to move the position of the camera (observer)
+      vec3.fromValues(50, 10, 15), // (50, 10, 15) -> You can change the value here in order to move the position of the camera (observer)
       vec3.fromValues(0, 0, 0)
     );
   }
@@ -115,43 +120,86 @@ export class MyScene extends CGFscene {
 
     // Check for key codes e.g. in https://keycode.info/
     if (this.gui.isKeyPressed("KeyW")) {
-      text+=" W ";
+      text += " W ";
       keysPressed=true;
       this.bird.accelerate(0.01*this.speedFactor);
     }
     if (this.gui.isKeyPressed("KeyS")) {
-      text+=" S ";
+      text += " S ";
       keysPressed=true;
       this.bird.accelerate(-0.01*this.speedFactor);
     }
     if (this.gui.isKeyPressed("KeyA")) {
-      text+=" A ";
+      text += " A ";
       keysPressed=true;
       this.bird.turn(-0.05*this.speedFactor);
     }
     if (this.gui.isKeyPressed("KeyD")) {
-      text+=" D ";
+      text += " D ";
       keysPressed=true;
       this.bird.turn(0.05*this.speedFactor);
     }
+
+    if (!this.bird.picking) {
+      if (this.gui.isKeyPressed("KeyP")) { // bir must go down until it hits the floor
+        text += " P ";
+        keysPressed = true;
+        this.bird.picking = true;
+        this.bird.down = true;
+        this.bird.getDown();
+      }
+    }
+
+    if (this.bird.picking) {
+      this.bird.getDown();
+    }
+    
     if (this.gui.isKeyPressed("KeyR")) {
-      text+=" R ";
+      text += " R ";
+      keysPressed = true;
       keysPressed=true;
       this.bird.reset();
+      this.nest.reset();
     }
-    if (keysPressed)
+    
+    if (this.bird.catchedEgg != null) {
+      if (this.gui.isKeyPressed("KeyO")) { // let go the catched egg
+        text += " O ";
+        keysPressed = true;
+        if ((this.bird.xPos >= this.nest.xPos - 4 && this.bird.xPos <= this.nest.xPos + 4) && (this.bird.zPos >= this.nest.zPos - 4 && this.bird.zPos <= this.nest.zPos + 4)) {
+          this.bird.picking = false;
+          this.bird.dropping = true;
+        }
+      }
+    }
+
+    if (this.bird.dropping) {
+      this.dropEgg();
+    }
+    
+    if (keysPressed) {
       console.log(text);
+    }
   }
+
+  dropEgg() {
+    if (this.bird.catchedEgg.yPos > this.nest.yPos) {
+      this.bird.catchedEgg.yPos -= ((-this.bird.terrainY) - (-this.bird.initialY)) / 60;
+      this.bird.catchedEgg.display();
+    } else { // on the nest
+      this.nest.catchedEggs.push(this.bird.catchedEgg);
+      this.bird.dropping = false;
+      this.bird.catchedEgg = null;
+    }
+	}
 
   update(t) {
     this.checkKeys();
 
     this.bird.move();
-
-    this.bird.yPos = Math.cos((t*this.speedFactor) / 200)/10;
+    // this.bird.yPos = Math.cos((t*this.speedFactor) / 200) / 5;
     this.bird.wingAngle = (Math.PI/16 + Math.cos((t*this.speedFactor) / 200)) % Math.PI/16;
-
-    
+    this.bird.tailAngle = (Math.PI/16 + Math.cos((t*this.speedFactor) / 200)) % Math.PI/16;
   }
   
   display() {
@@ -202,23 +250,18 @@ export class MyScene extends CGFscene {
       this.popMatrix();
     }
     
-    this.pushMatrix();
-    this.translate(0, 3, 0);
-    this.scale(0.8, 0.8, 0.8);
-    this.bird.display();
-    this.popMatrix();
+    if (this.displayBird) {
+      this.pushMatrix();
+      this.bird.display();
+      this.popMatrix();
+    }
 
-    // this.pushMatrix();
-		// this.translate(-1.5, 0, 1);
-    // this.rotate(1/2*Math.PI, 0, 1, 0);
-		// this.diamond.display();
-		// this.popMatrix();
+    if (this.displayNest) {
+      this.pushMatrix();
+      this.nest.display();
+      this.popMatrix();
+    }
 
-		// this.pushMatrix();
-		// this.translate(1.5, 0, 1);
-    // this.rotate(1/2*Math.PI, 0, 1, 0);
-		// this.diamond.display();
-		// this.popMatrix();
 
     // ---- END Primitive drawing section
   }
