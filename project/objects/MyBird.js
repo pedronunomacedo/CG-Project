@@ -3,7 +3,7 @@ import { MyCone } from './MyCone.js';
 import { MyDiamond } from './MyDiamond.js';
 import { MySphere } from './MySphere.js';
 import { MyTriangle } from './MyTriangle.js';
-
+import { MyBirdEgg } from "./MyBirdEgg.js";
 
 export class MyBird extends CGFobject {
 	constructor(scene, xPos, yPos, zPos, direction, speed) {
@@ -15,24 +15,38 @@ export class MyBird extends CGFobject {
 		this.sphere3 = new MySphere(scene, 100, 100, 1);
 		this.sphere4 = new MySphere(scene, 100, 100, 1);
 		this.cone1 = new MyCone(scene, 100, 100);
-		//this.cone2 = new MyCone(scene, 100, 100);
 		this.triangleObtuse1 = new MyTriangle(scene, 1);
 		this.triangleObtuse2 = new MyTriangle(scene, 2);
 		this.diamond = new MyDiamond(scene);
 		this.wing = new MySphere(scene, 10, 10, 1);
+		
+		this.terrainY = -53.8;
+		this.egg1 = new MyBirdEgg(scene, 20, this.terrainY, 70, 1);
+		this.egg2 = new MyBirdEgg(scene, 0, this.terrainY, 50, 2);
+		this.egg3 = new MyBirdEgg(scene, 50, this.terrainY, 30,  3);
+		this.egg4 = new MyBirdEgg(scene, 35, this.terrainY, 100, 4);
+		this.eggs = [this.egg1, this.egg2, this.egg3, this.egg4];
 
 		this.initBuffers();
 		this.initMaterials();
 
 		// Animation properties
-		this.wingAngle = Math.PI/2;
-		this.tailAngle = Math.PI/4;
+		this.wingAngle = Math.PI / 2;
+		this.tailAngle = Math.PI / 4;
 		this.xPos = xPos;
 		this.yPos = yPos;
 		this.zPos = zPos;
 		this.speed = speed;
 		this.direction = direction;
 		this.scene = scene;
+
+		this.picking = false;
+		this.dropping= false;
+		this.down = false;
+		this.catchedEgg = null;
+		this.initialX = xPos; // 20
+		this.initialY = yPos; // -51.3
+		this.initialZ = zPos; // 55
 	}
 
 	initMaterials() {
@@ -69,9 +83,18 @@ export class MyBird extends CGFobject {
 	}
 
 	display() {
-		this.scene.pushMatrix();
+		if (this.scene.displayEggs) {
+			this.scene.pushMatrix();
+			for (var i = 0; i < this.eggs.length; i++) {
+			  this.eggs[i].display();
+			}
+			this.scene.popMatrix();
+		}
 
+		this.scene.pushMatrix();
+			
 			this.scene.translate(this.xPos, this.yPos, this.zPos);
+			this.scene.scale(0.8, 0.8, 0.8);
 			this.scene.rotate(-this.direction, 0, 1, 0);
 			this.scene.rotate(-Math.PI/2, 0, 1, 0);
 			this.scene.rotate(-Math.PI * 0.1, 1, 0, 0);
@@ -98,7 +121,7 @@ export class MyBird extends CGFobject {
 				this.scene.rotate(Math.PI * 1/5, 1, 0, 0);
 				this.scene.rotate(this.wingAngle * 7, 0, 0, 1);
 
-				// ASA-1
+				// ASA-1-1
 				this.scene.pushMatrix();
 					this.scene.scale(0.6, 0.1, 0.4);
 					this.scene.rotate(Math.PI * 1/4, 1, 0, 0);
@@ -182,11 +205,47 @@ export class MyBird extends CGFobject {
 			this.scene.popMatrix();
 
 		this.scene.popMatrix();
-
 	}
 
 	turn(angle) {
-		this.direction = (this.direction + angle) % ( 2 * Math.PI);
+		this.direction = (this.direction + angle) % (2 * Math.PI);
+	}
+
+	getDown() {
+		if (this.down) {
+			if (this.yPos <= (this.terrainY - 0.8)) { // give a margin to catch the egg
+				this.down = false;
+				//this.yPos += ((-this.terrainY) - (-this.initialY)) / 60;
+				
+				console.log(this.xPos + " | " + this.yPos + " | " + this.zPos);
+				if (this.catchedEgg == null) { // only verifies if it the birs does not have an egg with him (a catched egg)
+					this.catchedEgg = this.checkForEgg();
+					if (this.catchedEgg != null) {
+						console.log("Catched an egg!");
+						// Catch the egg
+					}
+				}
+			} else {
+				this.yPos -= ((-this.terrainY) - (-this.initialY)) / 60;
+			}
+		} else {
+			if (this.yPos >= this.initialY) {
+				this.picking = false;
+			} else {
+				this.yPos += ((-this.terrainY) - (-this.initialY)) / 60;
+				console.log("Getting up ... (" + this.yPos + ")")
+			}
+		}
+	}
+
+	checkForEgg() {
+		for (var i = 0; i < this.eggs.length; i++) {
+			if ((this.xPos >= (this.eggs[i].xPos - 0.8) && this.xPos <= (this.eggs[i].xPos + 0.8)) && (this.zPos >= (this.eggs[i].zPos - 0.8) && this.zPos <= (this.eggs[i].zPos + 0.8))) {
+				return this.eggs[i];
+			}
+		}
+		
+		return null;
 	}
 
 	accelerate(speed) {
@@ -197,12 +256,24 @@ export class MyBird extends CGFobject {
 	move() {
 		this.xPos += this.speed * Math.cos(this.direction);
 		this.zPos += this.speed * Math.sin(this.direction);
+
+		if (this.catchedEgg != null) { // catched an egg (move the egg with the bird)
+			if (!this.dropping) {
+				this.catchedEgg.xPos = this.xPos;
+				this.catchedEgg.yPos = this.yPos;
+				this.catchedEgg.zPos = this.zPos;
+			} else { // dropping
+				this.dropping = true; // drop the egg
+			}
+		}
 	}
 
 	reset() {
-		this.xPos = 0;
-		this.zPos = 0;
-		this.direction = 0;
+		this.xPos = this.initialX;
+		this.yPos = this.initialY;
+		this.zPos = this.initialZ;
+		this.catchedEgg = null;
+		this.direction = this.initialZ;
 		this.speed = 0;
 	}
 }
