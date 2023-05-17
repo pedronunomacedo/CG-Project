@@ -43,6 +43,7 @@ export class MyBird extends CGFobject {
 		this.picking = false;
 		this.dropping= false;
 		this.down = false;
+		this.up = false;
 		this.catchedEgg = null;
 		this.initialX = xPos; // 20
 		this.initialY = yPos; // -51.3
@@ -214,6 +215,7 @@ export class MyBird extends CGFobject {
 	getDown() {
 		if (this.down) {
 			if (this.yPos <= (this.terrainY - 0.8)) { // give a margin to catch the egg
+				this.up = true;
 				this.down = false;
 
 				if (this.catchedEgg == null) { // only verifies if it the birs does not have an egg with him (a catched egg)
@@ -228,6 +230,7 @@ export class MyBird extends CGFobject {
 		} else {
 			if (this.yPos >= this.initialY) {
 				this.picking = false;
+				this.up = false;
 			} else {
 				this.yPos += ((-this.terrainY) - (-this.initialY)) / 60;
 			}

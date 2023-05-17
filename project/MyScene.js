@@ -5,6 +5,9 @@ import { MyPanorama } from "./objects/MyPanorama.js";
 import { MySphere } from "./objects/MySphere.js";
 import { MyBirdEgg } from "./objects/MyBirdEgg.js";
 import { MyNest } from "./objects/MyNest.js";
+import { MyBillboard } from "./objects/MyBillboard.js";
+import { MyTreeRowPatch } from "./objects/MyTreeRowPatch.js";
+import { MyTreeGroupPatch } from "./objects/MyTreeGroupPatch.js";
 
 
 /**
@@ -37,6 +40,12 @@ export class MyScene extends CGFscene {
       new CGFtexture(this, 'images/earth.jpg'), 
       new CGFtexture(this, 'images/panorama.jpg')
     ];
+
+    // Shaders
+    this.testShaders = [
+			new CGFshader(this.gl, "shaders/height.vert", "shaders/height.frag"),
+		];
+
     this.textureList = {
       'Earth' : 0, 
       'Panorama' : 1
@@ -50,6 +59,8 @@ export class MyScene extends CGFscene {
     this.panorama = new MyPanorama(this, this.textures[this.selectedTexture]);
     this.bird = new MyBird(this, 20, -20, 70, 0, 0, [0, 0.256, 1]); // in the same z as the first egg
     this.nest = new MyNest(this, 20, -51.3, 55); // y = -51.3
+    this.treeRow = new MyTreeRowPatch(this, this.bird.terrainY);
+    this.treeGroup = new MyTreeGroupPatch(this, this.bird.terrainY);
 
     // Objects connected to MyInterface
     this.displayAxis = true;
@@ -59,6 +70,7 @@ export class MyScene extends CGFscene {
     this.displayBird = true;
     this.displayEggs = true;
     this.displayNest = true;
+    this.displayTrees = true;
     this.scaleFactor = 1;
     this.speedFactor = 1;
 
@@ -77,10 +89,6 @@ export class MyScene extends CGFscene {
 		this.appearance.setTexture(this.texture);
 		this.appearance.setTextureWrap('REPEAT', 'REPEAT');
 
-    // Shaders
-    this.testShaders = [
-			new CGFshader(this.gl, "shaders/height.vert", "shaders/height.frag"),
-		];
     this.testShaders[0].setUniformsValues({ uSampler2: 1 , uSampler3: 2});
 
     this.setUpdatePeriod(10);
@@ -197,7 +205,10 @@ export class MyScene extends CGFscene {
     this.checkKeys();
 
     this.bird.move();
-    // this.bird.yPos = Math.cos((t*this.speedFactor) / 200) / 5;
+    if (!this.bird.picking) { // when the birs is picking an egg, the bird does not oscillate
+      this.bird.yPos = Math.cos((t*this.speedFactor) / 200) / 5;
+    }
+
     this.bird.wingAngle = (Math.PI/16 + Math.cos((t*this.speedFactor) / 200)) % Math.PI/16;
     this.bird.tailAngle = (Math.PI/16 + Math.cos((t*this.speedFactor) / 200)) % Math.PI/16;
   }
@@ -262,6 +273,13 @@ export class MyScene extends CGFscene {
       this.popMatrix();
     }
 
+    if (this.displayTrees) {
+      this.pushMatrix();
+      this.treeRow.display();
+      this.treeGroup.display();
+      this.popMatrix();
+    }
+    
 
     // ---- END Primitive drawing section
   }
