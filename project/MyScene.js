@@ -150,6 +150,7 @@ export class MyScene extends CGFscene {
 
     if (!this.bird.picking) {
       if (this.gui.isKeyPressed("KeyP")) { // bir must go down until it hits the floor
+        console.log("Intial bird Y: " + this.bird.initialY);
         text += " P ";
         keysPressed = true;
         this.bird.picking = true;
@@ -182,7 +183,7 @@ export class MyScene extends CGFscene {
     }
 
     if (this.bird.dropping) {
-      this.dropEgg();
+      this.bird.dropEgg();
     }
     
     if (keysPressed) {
@@ -190,24 +191,13 @@ export class MyScene extends CGFscene {
     }
   }
 
-  dropEgg() {
-    if (this.bird.catchedEgg.yPos > this.nest.yPos) {
-      this.bird.catchedEgg.yPos -= ((-this.bird.terrainY) - (-this.bird.initialY)) / 60;
-      this.bird.catchedEgg.display();
-    } else { // on the nest
-      this.nest.catchedEggs.push(this.bird.catchedEgg);
-      this.bird.dropping = false;
-      this.bird.catchedEgg = null;
-    }
-	}
+  
 
   update(t) {
     this.checkKeys();
 
     this.bird.move();
-    if (!this.bird.picking) { // when the birs is picking an egg, the bird does not oscillate
-      this.bird.yPos = Math.cos((t*this.speedFactor) / 200) / 5;
-    }
+    this.bird.yPos += Math.cos((t*this.speedFactor) / 200) / 6;
 
     this.bird.wingAngle = (Math.PI/16 + Math.cos((t*this.speedFactor) / 200)) % Math.PI/16;
     this.bird.tailAngle = (Math.PI/16 + Math.cos((t*this.speedFactor) / 200)) % Math.PI/16;

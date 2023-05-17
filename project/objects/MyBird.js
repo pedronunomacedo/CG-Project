@@ -46,8 +46,8 @@ export class MyBird extends CGFobject {
 		this.up = false;
 		this.catchedEgg = null;
 		this.initialX = xPos; // 20
-		this.initialY = yPos; // -51.3
-		this.initialZ = zPos; // 55
+		this.initialY = yPos; // -20
+		this.initialZ = zPos; // 70
 	}
 
 	initMaterials() {
@@ -234,6 +234,17 @@ export class MyBird extends CGFobject {
 			} else {
 				this.yPos += ((-this.terrainY) - (-this.initialY)) / 60;
 			}
+		}
+	}
+
+	dropEgg() {
+		if (this.catchedEgg.yPos > this.scene.nest.yPos) {
+		  this.catchedEgg.yPos -= ((-this.terrainY) - (-this.initialY)) / 60;
+		  this.catchedEgg.display();
+		} else { // on the nest
+		  this.scene.nest.catchedEggs.push(this.catchedEgg);
+		  this.dropping = false;
+		  this.catchedEgg = null;
 		}
 	}
 
