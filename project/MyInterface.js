@@ -27,7 +27,7 @@ export class MyInterface extends CGFinterface {
         this.gui.add(this.scene, 'displayEggs').name('Display Eggs');
         this.gui.add(this.scene, 'displayNest').name('Display Nest');
         this.gui.add(this.scene, 'displayTrees').name('Display Trees');
-
+        this.gui.add(this.scene, 'selectedEggThrow', this.scene.bird.eggThrowsList).onChange(this.scene.onSelectedEggThrowChanged.bind(this.scene)).name('Egg throw');
 
         //Slider element in GUI
         this.gui.add(this.scene, 'scaleFactor', 0.1, 5).name('Scale Factor');

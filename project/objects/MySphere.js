@@ -71,16 +71,16 @@ export class MySphere extends CGFobject {
           var tu = 0.25 + longD * longitude;
           var tv = latD * latitude;
           this.texCoords.push(tu, tv);
-  
         }
+        
         phi += phiInc;
       }
   
       if (this.side == 0) {
-          this.vertices.reverse();
-          this.normals.reverse();
-          this.normals = this.normals.map(x => x * (-1));
-          this.texCoords = this.texCoords.map(x => x * (-1));
+        this.vertices.reverse();
+        this.normals.reverse();
+        this.normals = this.normals.map(x => x * (-1));
+        this.texCoords = this.texCoords.map(x => x * (-1));
       }
   
       this.primitiveType = this.scene.gl.TRIANGLES;

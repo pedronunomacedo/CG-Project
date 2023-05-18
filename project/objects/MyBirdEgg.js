@@ -2,15 +2,17 @@ import { CGFobject, CGFappearance, CGFshader, CGFtexture } from '../../lib/CGF.j
 import { MyHemisphere } from './MyHemisphere.js';
 
 export class MyBirdEgg extends CGFobject {
-	constructor(scene, xPos, yPos, zPos, index) {
+	constructor(scene, id, xPos, yPos, zPos, index) {
 		super(scene);
 
 		// Bird elements
 		this.hemisphere = new MyHemisphere(scene, 100, 100);
+		this.id = id;
 
         this.xPos = xPos;
         this.yPos = yPos;
         this.zPos = zPos;
+		this.speed = 0;
 
 		this.eggIndex = index;
 

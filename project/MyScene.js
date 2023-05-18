@@ -18,7 +18,7 @@ export class MyScene extends CGFscene {
   constructor() {
     super();
     this.selectedTexture = 1;
-    this.selectedExampleShader = 0;
+    this.selectedEggThrow = 0;
   }
   init(application) {
     super.init(application);
@@ -50,6 +50,7 @@ export class MyScene extends CGFscene {
       'Earth' : 0, 
       'Panorama' : 1
     };
+
     //-------
 
     // Initialize scene objects
@@ -57,7 +58,7 @@ export class MyScene extends CGFscene {
     this.plane = new MyPlane(this, 30);
     this.sphere = new MySphere(this, 16, 8, 0);
     this.panorama = new MyPanorama(this, this.textures[this.selectedTexture]);
-    this.bird = new MyBird(this, 20, -20, 70, 0, 0, [0, 0.256, 1]); // in the same z as the first egg
+    this.bird = new MyBird(this, 20, -20, 70, 0, 0, [0, 0.256, 1]);
     this.nest = new MyNest(this, 20, -51.3, 55); // y = -51.3
     this.treeRow = new MyTreeRowPatch(this, this.bird.terrainY);
     this.treeGroup = new MyTreeGroupPatch(this, this.bird.terrainY);
@@ -122,7 +123,11 @@ export class MyScene extends CGFscene {
     this.panorama.setTexture(this.textures[this.selectedTexture]);
   }
 
-  checkKeys() {
+  onSelectedEggThrowChanged(v) {
+    this.bird.setEggThrow(this.selectedEggThrow);
+  }
+
+  checkKeys(t) {
     var text = "Keys pressed: ";
     var keysPressed = false;
 
@@ -150,7 +155,6 @@ export class MyScene extends CGFscene {
 
     if (!this.bird.picking) {
       if (this.gui.isKeyPressed("KeyP")) { // bir must go down until it hits the floor
-        console.log("Intial bird Y: " + this.bird.initialY);
         text += " P ";
         keysPressed = true;
         this.bird.picking = true;
@@ -175,15 +179,20 @@ export class MyScene extends CGFscene {
       if (this.gui.isKeyPressed("KeyO")) { // let go the catched egg
         text += " O ";
         keysPressed = true;
-        if ((this.bird.xPos >= this.nest.xPos - 4 && this.bird.xPos <= this.nest.xPos + 4) && (this.bird.zPos >= this.nest.zPos - 4 && this.bird.zPos <= this.nest.zPos + 4)) {
+        if (this.bird.selectedEggThrow == 0) { // Normal throw
           this.bird.picking = false;
           this.bird.dropping = true;
+          this.bird.catchedEgg.speed = this.bird.speed;
+        } else if (this.bird.selectedEggThrow == 1) { // Parable throw
+          this.bird.picking = false;
+          this.bird.dropping = true;
+          this.bird.catchedEgg.speed = this.bird.speed;
         }
       }
     }
 
     if (this.bird.dropping) {
-      this.bird.dropEgg();
+      this.bird.dropEgg(t);
     }
     
     if (keysPressed) {
@@ -194,7 +203,7 @@ export class MyScene extends CGFscene {
   
 
   update(t) {
-    this.checkKeys();
+    this.checkKeys(t);
 
     this.bird.move();
     this.bird.yPos += Math.cos((t*this.speedFactor) / 200) / 6;

@@ -21,10 +21,10 @@ export class MyBird extends CGFobject {
 		this.wing = new MySphere(scene, 10, 10, 1);
 		
 		this.terrainY = -53.8;
-		this.egg1 = new MyBirdEgg(scene, 20, this.terrainY, 70, 1);
-		this.egg2 = new MyBirdEgg(scene, 0, this.terrainY, 50, 2);
-		this.egg3 = new MyBirdEgg(scene, 50, this.terrainY, 30,  3);
-		this.egg4 = new MyBirdEgg(scene, 35, this.terrainY, 100, 4);
+		this.egg1 = new MyBirdEgg(scene, 0, 20, this.terrainY, 70, 1);
+		this.egg2 = new MyBirdEgg(scene, 1, 0, this.terrainY, 50, 2);
+		this.egg3 = new MyBirdEgg(scene, 2, 50, this.terrainY, 30,  3);
+		this.egg4 = new MyBirdEgg(scene, 3, 35, this.terrainY, 100, 4);
 		this.eggs = [this.egg1, this.egg2, this.egg3, this.egg4];
 
 		this.initBuffers();
@@ -48,6 +48,14 @@ export class MyBird extends CGFobject {
 		this.initialX = xPos; // 20
 		this.initialY = yPos; // -20
 		this.initialZ = zPos; // 70
+
+		this.eggThrowsList = {
+			'Normal' : 0, 
+			'Parable' : 1
+		};
+
+		this.selectedEggThrow = 0;
+		this.temp = 0;
 	}
 
 	initMaterials() {
@@ -237,20 +245,36 @@ export class MyBird extends CGFobject {
 		}
 	}
 
-	dropEgg() {
-		if (this.catchedEgg.yPos > this.scene.nest.yPos) {
-		  this.catchedEgg.yPos -= ((-this.terrainY) - (-this.initialY)) / 60;
-		  this.catchedEgg.display();
-		} else { // on the nest
-		  this.scene.nest.catchedEggs.push(this.catchedEgg);
-		  this.dropping = false;
-		  this.catchedEgg = null;
+	dropEgg(time) {
+		this.temp++;
+		
+		if (this.selectedEggThrow == 0) { // Normal throw
+			if (this.catchedEgg.yPos > this.scene.nest.yPos) {
+				this.catchedEgg.yPos -= ((-this.terrainY) - (-this.initialY)) / 60;
+				this.catchedEgg.display();
+			} else { // on the nest or on the floor
+				this.dropping = false;
+				this.catchedEgg = null;
+			}
+
+		} else if (this.selectedEggThrow == 1) { // Parable throw
+			if (this.catchedEgg.yPos > this.scene.nest.yPos) {
+				this.catchedEgg.xPos += (this.speed * time * Math.cos(this.direction) % 100 ) / 100;
+				this.catchedEgg.yPos -= (this.catchedEgg.speed * this.temp) * ((time % 1000) / 1000);
+				this.catchedEgg.zPos += (this.speed * time * Math.sin(this.direction) % 100 ) / 100;
+
+				this.catchedEgg.display();
+			} else { // on the floor or on the nest
+				this.dropping = false;
+				this.temp = 0;
+				this.catchedEgg = null;
+			}
 		}
 	}
 
 	checkForEgg() {
 		for (var i = 0; i < this.eggs.length; i++) {
-			if ((this.xPos >= (this.eggs[i].xPos - 0.8) && this.xPos <= (this.eggs[i].xPos + 0.8)) && (this.zPos >= (this.eggs[i].zPos - 0.8) && this.zPos <= (this.eggs[i].zPos + 0.8))) {
+			if ((this.xPos >= (this.eggs[i].xPos - 0.8) && this.xPos <= (this.eggs[i].xPos + 0.8)) && (this.zPos >= (this.eggs[i].zPos - 0.8) && this.zPos <= (this.eggs[i].zPos + 0.8))) {		
 				return this.eggs[i];
 			}
 		}
@@ -276,6 +300,10 @@ export class MyBird extends CGFobject {
 				this.dropping = true; // drop the egg
 			}
 		}
+	}
+
+	setEggThrow(selectedThrowIdx) {
+		this.selectedEggThrow = selectedThrowIdx;
 	}
 
 	reset() {
