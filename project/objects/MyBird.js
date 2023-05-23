@@ -256,7 +256,6 @@ export class MyBird extends CGFobject {
 				this.dropping = false;
 				this.catchedEgg = null;
 			}
-
 		} else if (this.selectedEggThrow == 1) { // Parable throw
 			if (this.catchedEgg.yPos > this.scene.nest.yPos) {
 				this.catchedEgg.xPos += (this.speed * time * Math.cos(this.direction) % 100 ) / 100;
