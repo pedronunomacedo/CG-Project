@@ -3,8 +3,8 @@
 ## Group T04G03
 | Name             | Number    | E-Mail             |
 | ---------------- | --------- | ------------------ |
-| Gonçalo Jorge Soares Ferreira         | 202004761 | up202004761@edu.fe.up.pt                |
-| Pedro Nuno Ferreira Moura de Macedo         | 202007531 | up202007531@edu.fe.up.pt                |
+| [Gonçalo Jorge Soares Ferreira](https://github.com/gonzallito)         | 202004761 | up202004761@edu.fe.up.pt                |
+| [Pedro Nuno Ferreira Moura de Macedo](https://github.com/pedronunomacedo)         | 202007531 | up202007531@edu.fe.up.pt                |
 
 ----
 
